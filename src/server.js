@@ -10,6 +10,7 @@ import router from './routers/index.js';
 import cookieParser from 'cookie-parser';
 import { UPLOAD_DIR } from './constants/index.js';
 import { swaggerDocs } from './middlewares/swaggerDocs.js';
+import { limiter } from './middlewares/rateLimit.js';
 import path from 'path';
 
 const PORT = Number(env('PORT', '3000'));
@@ -32,6 +33,7 @@ export const startServer = () => {
   app.use(express.json());
   app.use(cors(corsOptions));
   app.use(cookieParser());
+  app.use(limiter);
 
   // app.use(
   //   pino({
