@@ -151,14 +151,14 @@ export const resetPasswordController = async (req, res) => {
 const setupSession = (res, session) => {
   res.cookie('refreshToken', session.refreshToken, {
     httpOnly: true,
-    sameSite: 'None', // Устанавливаем SameSite=None для кросс-доменных запросов
-    secure: true, // Необходимо для работы SameSite=None (требует HTTPS)
+    sameSite: 'None',
+    secure: true,
     expires: new Date(Date.now() + THIRTY_DAYS),
   });
   res.cookie('sessionId', session._id, {
     httpOnly: true,
-    sameSite: 'None', // Устанавливаем SameSite=None для кросс-доменных запросов
-    secure: true, // Необходимо для работы SameSite=None (требует HTTPS)
+    sameSite: 'None',
+    secure: true,
     expires: new Date(Date.now() + THIRTY_DAYS),
   });
 };
