@@ -8,9 +8,10 @@ import { errorHandler } from './middlewares/errorHandler.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 import router from './routers/index.js';
 import cookieParser from 'cookie-parser';
-import { UPLOAD_DIR } from './constants/index.js';
+// import { UPLOAD_DIR } from './constants/index.js';
+import uploadRoutes from './routers/upload.js';
 import { swaggerDocs } from './middlewares/swaggerDocs.js';
-import path from 'path';
+// import path from 'path';
 
 const PORT = Number(env('PORT', '3000'));
 
@@ -43,16 +44,7 @@ export const startServer = () => {
 
   app.use(router);
 
-  app.use('/uploads', (req, res, next) => {
-    const allowedExtensions = ['.png', '.jpg', '.jpeg'];
-    const fileExtension = path.extname(req.url).toLowerCase();
-
-    if (!allowedExtensions.includes(fileExtension)) {
-      return res.status(403).send('Access denied');
-    }
-
-    express.static(UPLOAD_DIR)(req, res, next);
-  });
+  app.use('/api', uploadRoutes);
 
   app.use('/api-docs', swaggerDocs());
 
