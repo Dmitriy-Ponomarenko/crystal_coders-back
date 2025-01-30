@@ -8,7 +8,8 @@ import { errorHandler } from './middlewares/errorHandler.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 import router from './routers/index.js';
 import cookieParser from 'cookie-parser';
-import { UPLOAD_DIR } from './constants/index.js';
+// import { UPLOAD_DIR } from './constants/index.js';
+import uploadRoutes from './routers/upload.js';
 import { swaggerDocs } from './middlewares/swaggerDocs.js';
 import { limiter } from './middlewares/rateLimit.js';
 import path from 'path';
@@ -35,26 +36,17 @@ export const startServer = () => {
   app.use(cookieParser());
   app.use(limiter);
 
-  // app.use(
-  //   pino({
-  //     transport: {
-  //       target: 'pino-pretty',
-  //     },
-  //   }),
-  // );
+  app.use(
+    pino({
+      transport: {
+        target: 'pino-pretty',
+      },
+    }),
+  );
 
   app.use(router);
 
-  app.use('/uploads', (req, res, next) => {
-    const allowedExtensions = ['.png', '.jpg', '.jpeg'];
-    const fileExtension = path.extname(req.url).toLowerCase();
-
-    if (!allowedExtensions.includes(fileExtension)) {
-      return res.status(403).send('Access denied');
-    }
-
-    express.static(UPLOAD_DIR)(req, res, next);
-  });
+  app.use('/api', uploadRoutes);
 
   app.use('/api-docs', swaggerDocs());
 
